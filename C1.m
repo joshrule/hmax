@@ -111,7 +111,7 @@ iUFilterIndex = 0;
 % precalculate the normalizations for the usable filter sizes
 uFiltSizes = unique(fSiz);
 for i = 1:length(uFiltSizes)
-  s1Norm{uFiltSizes(i)} = (sumfilter(sqim,(uFiltSizes(i)-1)/2)).^0.5;
+  s1Norm{uFiltSizes(i)} = (sumFilter(sqim,(uFiltSizes(i)-1)/2)).^0.5;
   %avoid divide by zero
   s1Norm{uFiltSizes(i)} = s1Norm{uFiltSizes(i)} + ~s1Norm{uFiltSizes(i)};
 end 
@@ -156,9 +156,8 @@ end
 for iBand = 1:numScaleBands
   poolRange = (c1SpaceSS(iBand));
   for iFilt = 1:numSimpleFilters
-     myc1{iBand}(:,:,iFilt)  = mymaxfilter(c1{iBand}(:,:,iFilt),poolRange);
 %     c1{iBand} = T;
-%     c1{iBand}(:,:,iFilt) = maxfilter(c1{iBand}(:,:,iFilt),[0 0 poolRange-1 poolRange-1]);
+      c1{iBand}(:,:,iFilt) = maxFilter(c1{iBand}(:,:,iFilt),[0 0 poolRange-1 poolRange-1]);
   end
 end
  clear c1;

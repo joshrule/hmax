@@ -1,5 +1,5 @@
-function [fSiz,filters,c1OL,numSimpleFilters] = init_gabor(rot, RF_siz, Div)
-% function init_gabor(rot, RF_siz, Div)
+function [fSiz,filters,c1OL,numSimpleFilters] = initGabor(rot, RF_siz, Div)
+% function initGabor(rot, RF_siz, Div)
 % Thomas R. Serre
 % Feb. 2003
 

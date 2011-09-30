@@ -1,5 +1,5 @@
-function I3 = sumfilter(I,radius)
-%function I3 = sumfilter(I,radius);
+function I3 = sumFilter(I,radius)
+%function I3 = sumFilter(I,radius);
 %
 %I is the input image
 %radius is the additional radius of the window, i.e., 5 means 11 x 11

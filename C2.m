@@ -41,7 +41,7 @@ for iCenter = 1:n_rbf_centers
   Patch = reshape(s2Target(:,iCenter),PatchSize);
   s2{iCenter} = cell(nbands,1);
   for iBand = 1:nbands
-     s2{iCenter}{iBand} = WindowedPatchDistance(c1BandImage{iBand},Patch);  
+     s2{iCenter}{iBand} = windowedPatchDistance(c1BandImage{iBand},Patch);  
   end
 end
 

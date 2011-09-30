@@ -1,5 +1,5 @@
-function I = maxfilter(I,radius)
-%function I = maxfilter(I,radius)
+function I = maxFilter(I,radius)
+%function I = maxFilter(I,radius)
 %
 %Performs morphological dilation on a multilayer image.
 %
@@ -41,5 +41,5 @@ case 4,
     I(i,:,:) = max(B(i-radius(2):min(end,i+radius(4)),:,:),[],1);
   end
 otherwise,
-  error('maxfilter: poorly defined radius\n');
+  error('maxFilter: poorly defined radius\n');
 end
