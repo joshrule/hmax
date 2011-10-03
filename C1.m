@@ -156,8 +156,7 @@ end
 for iBand = 1:numScaleBands
   poolRange = (c1SpaceSS(iBand));
   for iFilt = 1:numSimpleFilters
-%     c1{iBand} = T;
-      c1{iBand}(:,:,iFilt) = maxFilter(c1{iBand}(:,:,iFilt),[0 0 poolRange-1 poolRange-1]);
+    myc1{iBand}(:,:,iFilt)  = mymaxfilter(c1{iBand}(:,:,iFilt),poolRange);
   end
 end
  clear c1;

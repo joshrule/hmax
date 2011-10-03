@@ -1,45 +1,55 @@
-function I = maxFilter(I,radius)
-%function I = maxFilter(I,radius)
+% PROPRIETARY INFORMATION
+% PROPRIETARY INFORMATION
+% PROPRIETARY INFORMATION
+% PROPRIETARY INFORMATION
 %
-%Performs morphological dilation on a multilayer image.
+% Copyright (c) 2010 by Jacob G. Martin - All Rights Reserved
 %
-%I is the input image
-%radius is the additional radius of the window, i.e., 5 means 11 x 11
-%if a four value vector is specified for radius, then any rectangular support may be used for max.
-%in the order left top right bottom.
-switch length(radius)
-case 1,
-  I = padImage(I,radius);
-  [n,m,thirdd] = size(I);
-  B = I;
-  for i = radius+1:m-radius,
-    B(:,i,:) = max(I(:,i-radius:i+radius,:),[],2);
-  end
-  for i = radius+1:n-radius,
-    I(i,:,:) = max(B(i-radius:i+radius,:,:),[],1);
-  end
-  I = unpadImage(I,radius);
-case 4,
-  [n,m,thirdd] = size(I);
-  B = I;
-  for i=1:radius(1)
-    B(:,i,:) = max(I(:,max(1,i-radius(1)):min(end,i+radius(3)),:),[],2);
-  end
-  for i = radius(1)+1:m-radius(3),
-    B(:,i,:) = max(I(:,i-radius(1):i+radius(3),:),[],2);
-  end
-  for i=m-radius(3)+1:m
-    B(:,i,:) = max(I(:,i-radius(1):min(end,i+radius(3)),:),[],2);
-  end
-  for i = 1:radius(2),
-    I(i,:,:) = max(B(max(1,i-radius(2)):i+radius(4),:,:),[],1);
-  end
-  for i = radius(2)+1:n-radius(4),
-    I(i,:,:) = max(B(max(1,i-radius(2)):min(end,i+radius(4)),:,:),[],1);
-  end
-  for i = n-radius(4)+1:n,
-    I(i,:,:) = max(B(i-radius(2):min(end,i+radius(4)),:,:),[],1);
-  end
-otherwise,
-  error('maxFilter: poorly defined radius\n');
+% Redistribution and use in source and binary forms, with or without
+% modification, are strictly prohibited.
+%
+% The name of Jacob G. Martin may not be used to endorse or promote products
+% derived from or associated with this software without specific prior written permission.
+% 
+% No products may be derived from or associated with this software without specific permission.
+%
+% This software is provided "AS IS," without a warranty of any
+% kind. ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND
+% WARRANTIES, INCLUDING ANY IMPLIED WARRANTY OF MERCHANTABILITY,
+% FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT, ARE HEREBY
+% EXCLUDED. Jacob G. Martin SHALL NOT BE LIABLE FOR ANY
+% DAMAGES OR LIABILITIES SUFFERED BY ANY ORGANIZATION OR ITS
+% LICENSEES AS A RESULT OF OR RELATING TO USE, MODIFICATION OR DISTRIBUTION OF THIS
+% SOFTWARE OR ITS DERIVATIVES. IN NO EVENT WILL Jacob G. Martin BE LIABLE
+% FOR ANY LOST REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT,
+% SPECIAL, CONSEQUENTIAL, INCIDENTAL OR PUNITIVE DAMAGES, HOWEVER
+% CAUSED AND REGARDLESS OF THE THEORY OF LIABILITY, ARISING OUT OF
+% THE USE OF OR INABILITY TO USE THIS SOFTWARE, EVEN IF Jacob G. Martin HAS
+% BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES AND THE USER OF THIS CODE
+% AGREES TO HOLD Jacob G. Martin HARMLESS THEREFROM.
+%
+% PROPRIETARY INFORMATION
+% PROPRIETARY INFORMATION
+% PROPRIETARY INFORMATION
+% PROPRIETARY INFORMATION
+
+
+function maxval = mymaxfilter(image,poolrange)
+
+[numrows numcols] = size(image);
+halfpool = poolrange/2;
+
+therowindices = 1:halfpool:numrows
+thecolindices = 1:halfpool:numcols
+maxval = zeros(length(therowindices),length(thecolindices));
+xcount = 1;
+ycount = 1;
+
+for i=therowindices
+    for j=thecolindices
+        maxval(xcount,ycount) = max(max(image(i:min(i+poolrange-1,numrows),j:min(j+poolrange-1,numcols))));
+        ycount=ycount+1;
+    end
+    xcount=xcount+1;
+    ycount=1;
 end
