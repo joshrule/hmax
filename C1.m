@@ -78,7 +78,7 @@ function [c1,s1] = C1(stim, filters, fSiz, c1SpaceSS, c1ScaleSS, c1OL,INCLUDEBOR
 % band i, the C1 unit responses are computed every c1Space(i)/c1OL.
 %
 % INCLUDEBORDERS - the type  of treatment for the image borders.
-stim = padimage(stim,64,0.0); %pad with zeros to avoid edge effects
+stim = padImage(stim,64,0.0); %pad with zeros to avoid edge effects
 USECONV2 = 1; %should be faster if 1
 
 USE_NORMXCORR_INSTEAD = 0;
@@ -178,7 +178,7 @@ end
 end
 
 function sout = removeborders(sin,siz)
-sin = unpadimage(sin, [(siz+1)/2,(siz+1)/2,(siz-1)/2,(siz-1)/2]);
+sin = unpadImage(sin, [(siz+1)/2,(siz+1)/2,(siz-1)/2,(siz-1)/2]);
 sin = padarray(sin, [(siz+1)/2,(siz+1)/2],0,'pre');
 sout = padarray(sin, [(siz-1)/2,(siz-1)/2],0,'post');
 

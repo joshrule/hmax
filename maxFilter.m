@@ -9,7 +9,7 @@ function I = maxFilter(I,radius)
 %in the order left top right bottom.
 switch length(radius)
 case 1,
-  I = padimage(I,radius);
+  I = padImage(I,radius);
   [n,m,thirdd] = size(I);
   B = I;
   for i = radius+1:m-radius,
@@ -18,7 +18,7 @@ case 1,
   for i = radius+1:n-radius,
     I(i,:,:) = max(B(i-radius:i+radius,:,:),[],1);
   end
-  I = unpadimage(I,radius);
+  I = unpadImage(I,radius);
 case 4,
   [n,m,thirdd] = size(I);
   B = I;

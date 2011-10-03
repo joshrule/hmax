@@ -1,10 +1,10 @@
-function o = unpadimage(i,amnt)
-%function o = unpadimage(i,amnt)
+function o = unpadImage(i,amnt)
+%function o = unpadImage(i,amnt)
 %
-%un does padimage
-%if length(amnt == 1), unpad equal on each side
-%if length(amnt == 2), first amnt is left right, second up down
-%if length(amnt == 4), then [left top right bottom];
+% undo padImage
+% if length(amnt == 1), unpad equal on each side
+% if length(amnt == 2), first amnt is left right, second up down
+% if length(amnt == 4), then [left top right bottom];
 
 switch(length(amnt))
 case 1
@@ -32,7 +32,7 @@ otherwise
   error('illegal unpad amount\n');
 end
 if(any([sx,sy] < 1))
-    fprintf('unpadimage newsize < 0, returning []\n');
+    fprintf('unpadImage newsize < 0, returning []\n');
     o = [];
     return;
 end

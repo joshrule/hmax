@@ -1,36 +1,28 @@
-function D = windowedPatchDistance(Im,Patch)
-%function D = windowedPatchDistance(Im,Patch)
+function D = windowedPatchDistance(img,patch)
+%function D = windowedPatchDistance(img,patch)
 %
-%computes the euclidean distance between Patch and all crops of Im of
-%similar size.
+% computes the euclidean distance between patch and all crops of img of
+% similar size.
 %
 % sum_over_p(W(p)-I(p))^2 is factored as
 % sum_over_p(W(p)^2) + sum_over_p(I(p)^2) - 2*(W(p)*I(p));
 %
-% Im and Patch must have the same number of channels
-%
-dIm = size(Im,3);
-dPatch = size(Im,3);
-if(dIm ~= dPatch)
-  fprintf('The patch and image must be of the same number of layers');
-end
-s = size(Patch);
-s(3) = dIm;
-Psqr = sum(sum(sum(Patch.^2)));
-Imsq = Im.^2;
-Imsq = sum(Imsq,3);
-sum_support = [ceil(s(2)/2)-1,ceil(s(1)/2)-1,floor(s(2)/2),floor(s(1)/2)];
-Imsq = sumFilter(Imsq,sum_support);
-PI = zeros(size(Imsq));
+% img and patch must have the same number of channels
 
-for i = 1:dIm
-	PI = PI + conv2(Im(:,:,i),Patch(:,:,i), 'same');
+assert(size(img,3) ~= size(patch,3), ...
+  'patch and image must have the same number of layers');
+
+Psqr = sum(sum(sum(patch.^2)));
+imgsq = sum((img.^2),3); % why merely sum over the third dimension (rgb)?
+s = size(patch);
+sumRadius = [ceil(s(2)/2)-1, ceil(s(1)/2)-1, floor(s(2)/2), floor(s(1)/2)];
+imgsq = sumFilter(imgsq,sumRadius);
+PI = zeros(size(imgsq));
+
+for i = 1:size(img,3)
+    PI = PI + conv2(img(:,:,i),patch(:,:,i), 'same');
 end
 
-tempval = Imsq - 2 * PI + Psqr;
+tempval = imgsq - 2 * PI + Psqr;
 tempval(tempval < 0) = 0;
-D = sqrt(tempval) + 10^-10;
-
-
-
-
+D = sqrt(tempval) + 10^-10; % what is 1E-10 here for?
