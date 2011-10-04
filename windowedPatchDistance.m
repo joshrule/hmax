@@ -9,8 +9,8 @@ function D = windowedPatchDistance(img,patch)
 %
 % img and patch must have the same number of channels
 
-assert(size(img,3) ~= size(patch,3), ...
-  'patch and image must have the same number of layers');
+assert(size(img,3) == size(patch,3), ...
+  'patch and image must have the same number of layers: %d != %d', size(img,3), size(patch,3));
 
 Psqr = sum(sum(sum(patch.^2)));
 imgsq = sum((img.^2),3); % why merely sum over the third dimension (rgb)?

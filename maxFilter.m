@@ -39,8 +39,8 @@ function maxval = mymaxfilter(image,poolrange)
 [numrows numcols] = size(image);
 halfpool = poolrange/2;
 
-therowindices = 1:halfpool:numrows
-thecolindices = 1:halfpool:numcols
+therowindices = 1:halfpool:numrows;
+thecolindices = 1:halfpool:numcols;
 maxval = zeros(length(therowindices),length(thecolindices));
 xcount = 1;
 ycount = 1;
