@@ -1,37 +1,49 @@
-function [fSiz,filters,c1OL,numSimpleFilters] = init_gabor(rot, RF_siz, Div)
-% function init_gabor(rot, RF_siz, Div)
-% Thomas R. Serre
-% Feb. 2003
+function [filterSizes,filters,c1OL,nOrientations] = initGabor(orientations,RFsize,div)
+% function [filterSizes,filters,c1OL,nOrientations] = initGabor(orientations,RFsize,div)
+%
+% By Thomas R. Serre, February 2003
+% Maintained by Jacob G. Martin, Josh Rule
+%
+% given orientations and receptive field sizes, returns a set of Gabor filters
+%
+% args:
+%
+%     orientations: a list of filter orientations in degrees, ex. [90 45 0 -45]
+%
+%     RFsize: a list of receptive field sizes for the filters
+%
+%     div: a list of scaling factors tuning the wavelength of the sinusoidal
+%         factor, 'lambda' in relation to the receptive field sizes
+%         length(div) = length(RFsize)
 
-c1OL             = 2;
-numFilterSizes   = length(RF_siz);
-numSimpleFilters = length(rot);
-numFilters       = numFilterSizes*numSimpleFilters;
-fSiz             = zeros(numFilters,1);	% vector with filter sizes
-filters          = zeros(max(RF_siz)^2,numFilters);
+c1OL          = 2;
+nFilterSizes  = length(RFsize);
+nOrientations = length(orientations);
+nFilters      = nFilterSizes*nOrientations;
+filterSizes   = zeros(nFilters,1); % vector of filter sizes
+filters       = zeros(max(RFsize)^2,nFilters);
 
-lambda = RF_siz*2./Div;
+lambda = RFsize*2./div;
 sigma  = lambda.*0.8;
-G      = 0.3;   % spatial aspect ratio: 0.23 < gamma < 0.92
+gamma  = 0.3; % spatial aspect ratio: 0.23 < gamma < 0.92
 
-for k = 1:numFilterSizes  
-    for r = 1:numSimpleFilters
-        theta     = rot(r)*pi/180;
-        filtSize  = RF_siz(k);
-        center    = ceil(filtSize/2);
-        filtSizeL = center-1;
-        filtSizeR = filtSize-filtSizeL-1;
-        sigmaq    = sigma(k)^2;
+for k = 1:nFilterSizes
+    for r = 1:nOrientations
+        theta        = orientations(r)*pi/180;
+        filterSize   = RFsize(k);
+        center       = ceil(filterSize/2);
+        filterSizeL  = center-1;
+        filterSizeR  = filterSize-filterSizeL-1;
+        sigmaSquared = sigma(k)^2;
         
-        for i = -filtSizeL:filtSizeR
-            for j = -filtSizeL:filtSizeR
-                
-                if ( sqrt(i^2+j^2)>filtSize/2 )
+        for i = -filterSizeL:filterSizeR
+            for j = -filterSizeL:filterSizeR
+                if ( sqrt(i^2+j^2)>filterSize/2 )
                     E = 0;
                 else
                     x = i*cos(theta) - j*sin(theta);
                     y = i*sin(theta) + j*cos(theta);
-                    E = exp(-(x^2+G^2*y^2)/(2*sigmaq))*cos(2*pi*x/lambda(k));
+                    E = exp(-(x^2+gamma^2*y^2)/(2*sigmaSquared))*cos(2*pi*x/lambda(k));
                 end
                 f(j+center,i+center) = E;
             end
@@ -39,8 +51,8 @@ for k = 1:numFilterSizes
        
         f = f - mean(mean(f));
         f = f ./ sqrt(sum(sum(f.^2)));
-        p = numSimpleFilters*(k-1) + r;
-        filters(1:filtSize^2,p)=reshape(f,filtSize^2,1);
-        fSiz(p)=filtSize;
+        iFilter = nOrientations*(k-1) + r;
+        filters(1:filterSize^2,iFilter)=reshape(f,filterSize^2,1);
+        filterSizes(iFilter)=filterSize;
     end
 end

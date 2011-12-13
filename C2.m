@@ -1,55 +1,51 @@
-function [c2,s2,c1,s1] = C2(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL,s2Target,c1)
-%function [c2,s2,c1,s1] = C2(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL,s2Target,c1)
+function [c2,s2,c1,s1] = C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,patches,c1)
+% function [c2,s2,c1,s1] = C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,patches,c1)
 %
-% given an image extracts layers s1 c1 s2 and finally c2
-% for inputs stim, filters, fSiz, c1SpaceSS,c1ScaleeSS, and c1OL
-% see the documentation for C1 (C1.m)
+% Maintained by Jacob G. Martin, Josh Rule
 %
-% briefly, 
-% stim is the input image. 
-% filters fSiz, c1SpaceSS, c1ScaleSS, c1OL are the parameters of
-% the c1 process
+% Given an image, returns S1, C1, S2, & C2 unit responses.
 %
-% s2Target are the prototype (patches) to be used in the extraction
-% of s2.  Each patch of size [n,n,d] is stored as a column in s2Target,
-% which has itself a size of [n*n*d, n_patches];
+% args:
 %
-% if available, a precomputed c1 layer can be used to save computation
-% time.  The proper format is the output of C1.m
+%     img: a 2- or 3-dimensional matrix, the input image
+%         must be grayscale and of type 'double'
 %
-% See also C1
+%     filters, filterSizes, c1Space, c1Scale, C1OL: see C1.m
+%
+%     patches: a 2-dimensional matrix, the prototypes (patches) used in the
+%     extraction of s2. Each patch of size [n,n,d] is stored as a column in
+%     patches, which has itself a size of [n*n*d, n_patches];
+%
+%     c1: a precomputed c1 layer can be used to save computation time if
+%         available.  The proper format is the output of C1.m
+%
+% See also C1 (C1.m)
 
+if (nargin < 8) [c1,s1] = C1(img,filters,filterSizes,c1Space,c1Scale,c1OL); end;
 
-if nargin<8
-  [c1,s1] = C1(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL);
-end
-
-nbands = length(c1);
+nBands = length(c1);
 c1BandImage = c1;
-nfilts = size(c1{1},3);
-n_rbf_centers = size(s2Target,2);
-L = size(s2Target,1) / nfilts;
-PatchSize = [L^.5,L^.5,nfilts];
+nFilters = size(c1{1},3);
+nRBFcenters = size(patches,2);
+L = size(patches,1) / nFilters;
+patchSize = [L^.5,L^.5,nFilters];
 
-s2 = cell(n_rbf_centers,1);
-
-%Build s2:
-%  for all prototypes in s2Target (RBF centers)
-%   for all bands
-%    calculate the image response
-for iCenter = 1:n_rbf_centers
-  Patch = reshape(s2Target(:,iCenter),PatchSize);
-  s2{iCenter} = cell(nbands,1);
-  for iBand = 1:nbands
-     s2{iCenter}{iBand} = WindowedPatchDistance(c1BandImage{iBand},Patch);  
-  end
+% Build s2:
+s2 = cell(nRBFcenters,1);
+for iCenter = 1:nRBFcenters % for all prototypes in patches (RBF centers)
+    patch = reshape(patches(:,iCenter),patchSize);
+    s2{iCenter} = cell(nBands,1);
+    for iBand = 1:nBands % for all bands
+        % calculate the image response
+        s2{iCenter}{iBand} = windowedPatchDistance(c1BandImage{iBand},patch);
+    end
 end
 
-%Build c2:
-% calculate minimum distance (maximum stimulation) across position and scales
-c2 = inf(n_rbf_centers,1);
-for iCenter = 1:n_rbf_centers
-  for iBand = 1:nbands
-     c2(iCenter) = min(c2(iCenter),min(min(s2{iCenter}{iBand})));
-  end
+% Build c2:
+c2 = inf(nRBFcenters,1);
+for iCenter = 1:nRBFcenters % for all prototypes
+    for iBand = 1:nBands % for all bands
+        % calculate min. distance (max. stimulation) across position and scales
+        c2(iCenter) = min(c2(iCenter),min(min(s2{iCenter}{iBand})));
+    end
 end

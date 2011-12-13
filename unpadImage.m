@@ -1,39 +1,49 @@
-function o = unpadimage(i,amnt)
-%function o = unpadimage(i,amnt)
+function imgOut = unpadImage(imgIn,pad)
+%function imgOut = unpadImage(imgIn,pad)
 %
-%un does padimage
-%if length(amnt == 1), unpad equal on each side
-%if length(amnt == 2), first amnt is left right, second up down
-%if length(amnt == 4), then [left top right bottom];
+% Maintained by Jacob G. Martin, Josh Rule
+%
+% undoes padimage
+%
+% args:
+%
+%     imgIn: a 2- or 3-dimensional matrix, the image to be unpadded
+%
+%     pad: a scalar or matrix, indicates how many pixels to strip from each side
+%         if length(pad) == 1, unpad equally on all sides
+%         if length(pad) == 2, first is left & right, second up & down
+%         if length(pad) == 4, [left top right bottom];
+%
+% see also padImage.m
 
-switch(length(amnt))
+switch length(pad)
 case 1
-  sx = size(i,2) - 2 * amnt;
-  sy = size(i,1) - 2 * amnt;
-  l = amnt + 1;
-  r = size(i,2) - amnt;
-  t = amnt + 1;
-  b = size(i,1) - amnt;
+    cols = size(imgIn,2) - 2 * pad;
+    rows = size(imgIn,1) - 2 * pad;
+    l = pad + 1;
+    r = size(imgIn,2) - pad;
+    t = pad + 1;
+    b = size(imgIn,1) - pad;
 case 2
-  sx = size(i,2) - 2 * amnt(1);
-  sy = size(i,1) - 2 * amnt(2);
-  l = amnt(1) + 1;
-  r = size(i,2) - amnt(1);
-  t = amnt(2) + 1;
-  b = size(i,1) - amnt(2);
+    cols = size(imgIn,2) - 2 * pad(1);
+    rows = size(imgIn,1) - 2 * pad(2);
+    l = pad(1) + 1;
+    r = size(imgIn,2) - pad(1);
+    t = pad(2) + 1;
+    b = size(imgIn,1) - pad(2);
 case 4
-  sx = size(i,2) - (amnt(1) + amnt(3));
-  sy = size(i,1) - (amnt(2) + amnt(4));
-  l = amnt(1) + 1;
-  r = size(i,2) - amnt(3);
-  t = amnt(2) + 1;
-  b = size(i,1) - amnt(4);
+    cols = size(imgIn,2) - (pad(1) + pad(3));
+    rows = size(imgIn,1) - (pad(2) + pad(4));
+    l = pad(1) + 1;
+    r = size(imgIn,2) - pad(3);
+    t = pad(2) + 1;
+    b = size(imgIn,1) - pad(4);
 otherwise
-  error('illegal unpad amount\n');
+    error('illegal unpad amount\n');
 end
-if(any([sx,sy] < 1))
-    fprintf('unpadimage newsize < 0, returning []\n');
+if(any([cols,rows] < 1))
+    fprintf('unpadImage new size < 0, returning []\n');
     o = [];
     return;
 end
-o = i(t:b,l:r,:);
+imgOut = imgIn(t:b,l:r,:);
