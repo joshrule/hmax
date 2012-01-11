@@ -34,9 +34,10 @@
 % PROPRIETARY INFORMATION
 
 
-function [cPatches bandschosen patchsizeschosen] = randC1Patches(cItrainingOnly, numPatchesPerSize, patchSizes);
+function [cPatches bandschosen imgChosen patchsizeschosen] = randC1Patches(cItrainingOnly, numPatchesPerSize, patchSizes);
 % extracts random prototypes for the training of the C2 classification system.
 % cPatches the returned prototypes
+% imgChosen, the image the patch came from
 % cItrainingOnly the training images
 % numPatchesPerSize is the number of prototypes extracted for each size
 % patchSizes is the vector of the patch sizes
@@ -68,13 +69,19 @@ maxFS     = 39;
 [fSiz,filters,c1OL,numSimpleFilters] = initGabor(rot, RF_siz, Div);
 
 % select patch source images and get their S1/C1 activations
-sourceImgs = cItrainingOnly(floor(rand(1,nPatchesTotal)*nImages) + 1);
-parfor i = 1:nPatchSizes*numPatchesPerSize
+fprintf('reading images\n');
+sourceImgs = cItrainingOnly(floor(rand(1,nPatchesTotal)*nImages)+1);
+parfor i = 1:numPatchesPerSize % we reuse images for multiple patches
     stim = rgb2gray(imread(sourceImgs{i})); % WARNING: side-effects.
     [c1source(i,:,:,:),~] = C1(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL);
+    fprintf(',');
+    if mod(i,100) == 0
+        fprintf('\n');
+    end
 end
 
 % initialize neccesary arrays/cells
+fprintf('initializing arrays\n');
 cPatches = cell(nPatchSizes,1);
 bsize = [0 0];
 pind = zeros(nPatchSizes,1);
@@ -83,8 +90,10 @@ parfor j = 1:nPatchSizes
 end
 bandschosen = zeros(1,numPatchesPerSize * nPatchSizes);
 patchsizeschosen = zeros(1,numPatchesPerSize * nPatchSizes);
+imgChosen = cell(1,numPatchesPerSize * nPatchSizes);
 
 % select a patch from a random C1 band
+fprintf('creating patches\n');
 count = 1;
 for i=1:numPatchesPerSize
     b = c1source(i,:,:,:);
@@ -100,6 +109,11 @@ for i=1:numPatchesPerSize
                 foundband = 1;
                 bandschosen(1,count) = randbandindex;
                 patchsizeschosen(1,count) = j;
+                imgChosen{1,count} = sourceImgs{i};
+                fprintf('.');
+                if mod(count,100) == 0
+                    fprintf('\n');
+                end
                 count = count + 1;
             end
         end
