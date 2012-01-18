@@ -74,10 +74,6 @@ sourceImgs = cItrainingOnly(floor(rand(1,nPatchesTotal)*nImages)+1);
 parfor i = 1:numPatchesPerSize % we reuse images for multiple patches
     stim = rgb2gray(imread(sourceImgs{i})); % WARNING: side-effects.
     [c1source(i,:,:,:),~] = C1(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL);
-    fprintf(',');
-    if mod(i,100) == 0
-        fprintf('\n');
-    end
 end
 
 % initialize neccesary arrays/cells
