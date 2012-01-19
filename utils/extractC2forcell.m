@@ -88,10 +88,10 @@ for i = 1:length(cImages), %for every input image
   
   for j = 1:numPatchSizes, %for every unique patch size
     if isempty(c1),  %compute C2
-      [tmpC2,tmp,c1,~,bestbandnum,bestlocation] = C2(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL,cPatches{j},[],patchSizes(:,j),s2c1prune);
+      [tmpC2,tmp,c1,~,bestbandnum,bestlocation] = C2locations(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL,cPatches{j},[],patchSizes(:,j),s2c1prune);
       c1Cache{1,i} = c1;
     else
-      [tmpC2,s2,~,~,bestbandnum,bestlocation] = C2(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL,cPatches{j},c1,patchSizes(:,j),s2c1prune);
+      [tmpC2,s2,~,~,bestbandnum,bestlocation] = C2locations(stim,filters,fSiz,c1SpaceSS,c1ScaleSS,c1OL,cPatches{j},c1,patchSizes(:,j),s2c1prune);
     end
     iC2 = [iC2;tmpC2];
     ibestbands = [ibestbands;bestbandnum];
