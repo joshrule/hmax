@@ -1,7 +1,5 @@
 function imgOut = sumFilter(imgIn,radius)
-% function imgOut = sumFilter(imgIn,radius);
-%
-% Maintained by Jacob G. Martin, Josh Rule
+% imgOut = sumFilter(imgIn,radius);
 %
 % Given an image and pooling range, returns an image where each "pixel"
 % represents the sums of the pixel values within the pooling range of the
@@ -12,8 +10,14 @@ function imgOut = sumFilter(imgIn,radius)
 %     imgIn: a 2-dimensional matrix, the image to be filtered
 %
 %     radius: a scalar or vector, the additional radius of the filter pool,
-%         For a scalar, ex. radius = 5 means a filter pool of 11 x 11
-%         For a vector, use the order [left top right bottom].
+%     For a scalar, ex. radius = 5 means a filter pool of 11 x 11
+%     For a vector, use the order [left top right bottom].
+%
+% returns:
+%
+%     imgOut: a matrix the size of imgIn, where each pixel, imgOut(x,y),
+%     represents the sum of the values of all pixels in imgIn within the
+%     neighborhood of imgIn(x,y) defined by radius
 
 if (size(imgIn,3) > 1) error('Only single-channel images are allowed'); end;
 
