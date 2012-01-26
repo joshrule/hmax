@@ -1,9 +1,7 @@
 function imgOut = padImage(imgIn,pad,method)
-% function imgOut = padImage(imgIn,pad,method)
+% imgOut = padImage(imgIn,pad,method)
 % 
-% Maintained by Jacob G. Martin, Josh Rule
-%
-% Given an image, padding pad, and padding method, returns a padded image.
+% Given an image, padding amount, and padding method, returns a padded image.
 % Think of it as padarray operating on only the first 2 dimensions of a 3
 % dimensional image.
 %
@@ -18,6 +16,10 @@ function imgOut = padImage(imgIn,pad,method)
 %        'replicate'   Repeat border elements of A.
 %        'symmetric'   Pad array with mirror reflections of itself. 
 %        XYZ           scalars, ex. 0, 14, 255
+%
+% returns:
+%
+%     imgOut: a 2- or 3-dimensional matrix, the unpadded image
 %
 % see also unpadImage.m
 

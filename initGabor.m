@@ -1,8 +1,5 @@
 function [filterSizes,filters,c1OL,nOrientations] = initGabor(orientations,RFsize,div)
-% function [filterSizes,filters,c1OL,nOrientations] = initGabor(orientations,RFsize,div)
-%
-% By Thomas R. Serre, February 2003
-% Maintained by Jacob G. Martin, Josh Rule
+% [filterSizes,filters,c1OL,nOrientations] = initGabor(orientations,RFsize,div)
 %
 % given orientations and receptive field sizes, returns a set of Gabor filters
 %
@@ -13,8 +10,24 @@ function [filterSizes,filters,c1OL,nOrientations] = initGabor(orientations,RFsiz
 %     RFsize: a list of receptive field sizes for the filters
 %
 %     div: a list of scaling factors tuning the wavelength of the sinusoidal
-%         factor, 'lambda' in relation to the receptive field sizes
-%         length(div) = length(RFsize)
+%     factor, 'lambda' in relation to the receptive field sizes
+%     length(div) = length(RFsize)
+%
+% returns:
+%
+%     filterSizes: (for S1 units) a vector, contains filter sizes.
+%     filterSizes(i) = n if filters(i) is n x n (see 'filters' above).
+%
+%     filters: (for S1 units) a matrix of Gabor filters of size max_filterSizes
+%     x nFilters, where max_filterSizes is the length of the largest filter &
+%     nFilters is the total number of filters. Column j of 'filters' contains a
+%     n_jxn_j filter, reshaped as a column vector and padded with zeros. n_j =
+%     filterSizes(j).
+%
+%     c1OL: (for C1 units) a scalar, defines the overlap between C1 units.
+%     In scale band i, C1 unit responses are computed every c1Space(i)/c1OL.
+%
+%     nOrientations: the number of orientations generated for each filter
 
 c1OL          = 2;
 nFilterSizes  = length(RFsize);
