@@ -27,6 +27,7 @@ function [c2,s2,c1,s1] = C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,patches
 %
 % See also C1 (C1.m)
 
+s1 = [];
 if (nargin < 8) [c1,s1] = C1(img,filters,filterSizes,c1Space,c1Scale,c1OL); end;
 
 nBands = length(c1);
