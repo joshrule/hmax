@@ -26,6 +26,6 @@ function imgOut = padImage(imgIn,pad,method)
 if (nargin < 3) method = 'replicate'; end;
 
 imgOut = zeros(size(imgIn,1)+2*pad, size(imgIn,2)+2*pad, size(imgIn,3));
-for iLayer = 1:size(i,3)
+for iLayer = 1:size(imgIn,3)
     imgOut(:,:,iLayer) = padarray(imgIn(:,:,iLayer),[pad,pad],method,'both');
 end

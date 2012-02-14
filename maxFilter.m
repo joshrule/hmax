@@ -18,18 +18,17 @@ function maxValues = maxFilter(img,poolSize)
 
 [nRows nCols] = size(img);
 halfpool = poolSize/2;
-rowIndices = 1:halfpool:(nRows-poolSize)+poolSize;
-colIndices = 1:halfpool:(nCols-poolSize)+poolSize;
+rowIndices = 1:halfpool:nRows;
+colIndices = 1:halfpool:nCols;
 maxValues = zeros(size(rowIndices,2),size(colIndices,2));
-rCount = 1;
-cCount = 1;
 
+rCount = 1;
 for r = rowIndices
+    cCount = 1;
     for c = colIndices
         maxValues(rCount,cCount) = max(max(img(r:min(r+poolSize-1,nRows),...
                                                c:min(c+poolSize-1,nCols))));
         cCount = cCount+1;
     end
     rCount = rCount+1;
-    cCount = 1;
 end

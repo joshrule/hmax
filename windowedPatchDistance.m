@@ -23,9 +23,7 @@ function distances = windowedPatchDistance(c1Img,patch)
 
 c1ImgDepth = size(c1Img,3);
 patchDepth = size(patch,3);
-if(c1ImgDepth ~= patchDepth)
-    fprintf('windowedPa....m: patch and c1Img must have the same depth\n');
-end
+assert((c1ImgDepth == patchDepth), 'windowedP...m: patch and c1Img depth differ\n');
 
 patchSize = size(patch);
 patchSize(3) = c1ImgDepth;

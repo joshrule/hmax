@@ -19,18 +19,11 @@ function imgOut = sumFilter(imgIn,radius)
 %     represents the sum of the values of all pixels in imgIn within the
 %     neighborhood of imgIn(x,y) defined by radius
 
-if (size(imgIn,3) > 1) error('Only single-channel images are allowed'); end;
+assert((size(imgIn,3) <= 1), 'Only single-channel images are allowed');
 
 switch length(radius)
-  case 4,
-    imgMid = conv2(ones(1,radius(2)+radius(4)+1),...
-                   ones(radius(1)+radius(3)+1,1),...
-                   imgIn);
-    imgOut = imgMid((radius(4)+1:radius(4)+size(imgIn,1)),...
-                    (radius(3)+1:radius(3)+size(imgIn,2)));
-  case 1,
-    mask = ones(2*radius+1,1);
-    imgMid = conv2(mask, mask, imgIn);
-    imgOut = imgMid((radius+1:radius+size(imgIn,1)),...
-                    (radius+1:radius+size(imgIn,2)));  
+case 4,
+    imgOut = conv2(imgIn, ones(radius(2)+radius(4)+1,radius(1)+radius(3)+1), 'same');
+case 1,
+    imgOut = conv2(imgIn, ones(2*radius+1), 'same');
 end
