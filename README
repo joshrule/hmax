@@ -16,17 +16,19 @@ Included are the following files:
 
 - README: this document
 
-- C1.m: given an image, this function returns S1 & C1 unit responses
+- C1.m: Given an image, this function returns S1 & C1 unit responses
 
-- C2.m: given an image, this function returns S1, C1, S2, & C2 unit responses.
+- C2.m: Given an image, this function returns S1, C1, S2, & C2 unit responses.
 
-- example.m: given the path to an image, this function returns unit responses for that image, the patches and filters used, and total run time
+- example.m: Given the path to an image, this function returns unit responses for that image, the patches and filters used, and total run time
 
-- initGabor.m: given orientations and receptive field sizes, this function returns a set of Gabor filters
+- initGabor.m: Given orientations and receptive field sizes, this function returns a set of Gabor filters
 
-- maxFilter.m: given an image and pooling range, this function returns a matrix of the image's maximum values in each neighborhood defined by the pooling range
+- maxFilter.m: Given an image and pooling range, this function returns a matrix of the image's maximum values in each neighborhood defined by the pooling range
 
 - padImage.m: Given an image, padding amount, and padding method, this function returns a padded image. Think of it as padarray operating on only the first 2 dimensions of a 3 dimensional array.
+
+- responseFromCells.m: Extract all responses for a set of images.
 
 - sumFilter.m: Given an image and pooling range, this function returns an image where each "pixel" represents the sums of the pixel values within the pooling range of the original pixel.
 
@@ -37,7 +39,7 @@ Included are the following files:
 Contact
 -------
 
-Please direct all questions and bug reports to the project's current maintainers, listed in AUTHORS.
+Please direct all questions and bug reports to the project's current maintainer, listed in AUTHORS.
 
 License
 -------

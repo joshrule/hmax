@@ -16,19 +16,20 @@ function maxValues = maxFilter(img,poolSize)
 %     maxValues: a matrix whose size depends on poolSize, contains the maximum
 %     values found in poolSize x poolSize areas across img.
 
-[nRows nCols] = size(img);
-halfpool = poolSize/2;
-rowIndices = 1:halfpool:nRows;
-colIndices = 1:halfpool:nCols;
-maxValues = zeros(size(rowIndices,2),size(colIndices,2));
+    [nRows nCols] = size(img);
+    halfpool = poolSize/2;
+    rowIndices = 1:halfpool:nRows;
+    colIndices = 1:halfpool:nCols;
+    maxValues = zeros(size(rowIndices,2),size(colIndices,2));
 
-rCount = 1;
-for r = rowIndices
-    cCount = 1;
-    for c = colIndices
-        maxValues(rCount,cCount) = max(max(img(r:min(r+poolSize-1,nRows),...
-                                               c:min(c+poolSize-1,nCols))));
-        cCount = cCount+1;
+    rCount = 1;
+    for r = rowIndices
+        cCount = 1;
+        for c = colIndices
+            maxValues(rCount,cCount) = max(max(img(r:min(r+poolSize-1,nRows),...
+                                                   c:min(c+poolSize-1,nCols))));
+            cCount = cCount+1;
+        end
+        rCount = rCount+1;
     end
-    rCount = rCount+1;
 end

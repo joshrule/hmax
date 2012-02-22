@@ -23,9 +23,10 @@ function imgOut = padImage(imgIn,pad,method)
 %
 % see also unpadImage.m
 
-if (nargin < 3) method = 'replicate'; end;
+    if (nargin < 3) method = 'replicate'; end;
 
-imgOut = zeros(size(imgIn,1)+2*pad, size(imgIn,2)+2*pad, size(imgIn,3));
-for iLayer = 1:size(imgIn,3)
-    imgOut(:,:,iLayer) = padarray(imgIn(:,:,iLayer),[pad,pad],method,'both');
+    imgOut = zeros(size(imgIn,1)+2*pad, size(imgIn,2)+2*pad, size(imgIn,3));
+    for iLayer = 1:size(imgIn,3)
+        imgOut(:,:,iLayer) = padarray(imgIn(:,:,iLayer),[pad,pad],method,'both');
+    end
 end
