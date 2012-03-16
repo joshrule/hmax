@@ -45,7 +45,7 @@ function [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filte
 
     if (nargin < 13) IGNOREPARTIALS = 0; end;
     if (nargin < 12) ORIENTATIONS2C1PRUNE = 0; end;
-    if (nargin < 11) c1 = cell(1,nImgs); end;
+    if (nargin < 11 || isempty(c1)) c1 = cell(1,nImgs); end;
     if (nargin < 10) ALLS2C1PRUNE = 0; end;
 
     % because conv2 is faster than filter2
@@ -56,14 +56,18 @@ function [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filte
     s1 = cell(1,nImgs);
     bestBands = zeros(nPatches,nImgs);
     bestLocations = zeros(nPatches,nImgs,2);
-    parfor iImg = 1:nImgs
+    for iImg = 1:nImgs
         for iPatch = 1:nPatchSizes
+            patchIndices = (nPatchesPerSize*(iPatch-1)+1):(nPatchesPerSize*iPatch);
             if isempty(c1{iImg}),  %compute C1 & S1
-                [c2(iPatch,iImg),s2{iImg}{iPatch},c1{iImg},s1{iImg},bestBands(iPatch,iImg),bestLocations(iPatch,iImg,:)] =...
+                [c2(patchIndices,iImg),s2{iImg}{iPatch},c1{iImg},s1{iImg},bestBands(patchIndices,iImg),bestLocations(patchIndices,iImg,:)] =...
                 C2(imgs{iImg},filters,filterSizes,c1Space,c1Scale,c1OL,flippedPatches{iPatch},patchSizes(:,iPatch)',[],IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
+                s2{iImg}{iPatch} = 0; % takes too much memory
+                s1{iImg} = 0; % takes too much memory
             else
-                [c2(iPatch,iImg),s2{iImg}{iPatch},~,~,bestBands(iPatch,iImg),bestLocations(iPatch,iImg,:)] =...
+                [c2(patchIndices,iImg),s2{iImg}{iPatch},~,~,bestBands(patchIndices,iImg),bestLocations(patchIndices,iImg,:)] =...
                 C2(imgs{iImg},filters,filterSizes,c1Space,c1Scale,c1OL,flippedPatches{iPatch},patchSizes(:,iPatch)',c1{iImg},IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
+                s2{iImg}{iPatch} = 0; % takes too much memory
             end
         end
     end

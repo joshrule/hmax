@@ -51,7 +51,7 @@ function [c2,s2,c1,s1,bestBands,bestLocations] = C2(img,filters,filterSizes,c1Sp
     nPatches = size(linearPatches,2);
 
     % Build s2:
-    s2 = cell(1,nPatches);
+    s2 = cell(nPatches,1);
     for iPatch = 1:nPatches
         squarePatch = reshape(linearPatches(:,iPatch),patchSize);
         s2{iPatch} = cell(nBands,1);

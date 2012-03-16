@@ -55,7 +55,7 @@ function [c1,s1] = C1(img,filters,filterSizes,c1Space,c1Scale,c1OL,INCLUDEBORDER
     for i = 1:nFilts
         sqfilter{i} = reshape(filters(1:(filterSizes(i)^2),i),filterSizes(i),filterSizes(i));
         if USECONV2 % flip to use conv2 instead of imfilter
-            sqfilter{i} = sqfilter{i}(end:-1:1,end:-1:1);
+            sqfilter{i} = double(sqfilter{i}(end:-1:1,end:-1:1));
         end
     end
 
