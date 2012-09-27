@@ -1,20 +1,30 @@
-function I3 = sumFilter(I,radius)
-%function I3 = sumFilter(I,radius);
+function imgOut = sumFilter(imgIn,radius)
+% imgOut = sumFilter(imgIn,radius);
 %
-% I is the input image
-% radius is the additional radius of the mask, i.e., 5 means a mask of 11 x 11
-% if radius is a four value vector, any rectangular support may be used.
-% The order should be [left top right bottom].
+% Given an image and pooling range, returns an image where each "pixel"
+% represents the sums of the pixel values within the pooling range of the
+% original pixel.
+%
+% args:
+%
+%     imgIn: a 2-dimensional matrix, the image to be filtered
+%
+%     radius: a scalar or vector, the additional radius of the filter pool,
+%     For a scalar, ex. radius = 5 means a filter pool of 11 x 11
+%     For a vector, use the order [left top right bottom].
+%
+% returns:
+%
+%     imgOut: a matrix the size of imgIn, where each pixel, imgOut(x,y),
+%     represents the sum of the values of all pixels in imgIn within the
+%     neighborhood of imgIn(x,y) defined by radius
 
-if (size(I,3) > 1)
-    error('Only single-channel images are allowed');
-end
+    assert((size(imgIn,3) == 1), 'Only single-channel images are allowed');
 
-switch length(radius)
-  case 4,
-    mask = ones(radius(2)+radius(4)+1, radius(1)+radius(3)+1);
-    I3 = conv2(double(I), mask, 'same');
-  case 1,
-    mask = ones(2*radius+1);
-    I3 = conv2(double(I), mask, 'same');
+    switch length(radius)
+    case 4,
+        imgOut = conv2(imgIn, ones(radius(2)+radius(4)+1,radius(1)+radius(3)+1), 'same');
+    case 1,
+        imgOut = conv2(imgIn, ones(2*radius+1), 'same');
+    end
 end
