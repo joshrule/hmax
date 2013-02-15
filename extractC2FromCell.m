@@ -1,4 +1,4 @@
-function [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filterSizes,c1Space,c1Scale,c1OL,linearPatches,imgs,nPatchSizes,patchSizes,ALLS2C1PRUNE,c1,ORIENTATIONS2C1PRUNE,IGNOREPARTIALS)
+function [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filterSizes,c1Space,c1Scale,c1OL,linearPatches,imgs,nPatchSizes,patchSizes,ALLS2C1PRUNE,c1,ORIENTATIONS2C1PRUNE,IGNOREPARTIALS,maxSize)
 % [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filterSizes,c1Space,c1Scale,c1OL,linearPatches,imgs,nPatchSizes,patchSizes,ALLS2C1PRUNE,c1,ORIENTATIONS2C1PRUNE,IGNOREPARTIALS)
 %
 % For each image in 'imgs', extract all responses.
@@ -57,16 +57,17 @@ function [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filte
     bestBands = zeros(nPatches,nImgs);
     bestLocations = zeros(nPatches,nImgs,2);
     for iImg = 1:nImgs
+        img = double(resizeImage(grayImage(imread(imgs{iImg})),maxSize));
         for iPatch = 1:nPatchSizes
             patchIndices = (nPatchesPerSize*(iPatch-1)+1):(nPatchesPerSize*iPatch);
             if isempty(c1{iImg}),  %compute C1 & S1
                 [c2(patchIndices,iImg),s2{iImg}{iPatch},c1{iImg},s1{iImg},bestBands(patchIndices,iImg),bestLocations(patchIndices,iImg,:)] =...
-                C2(imgs{iImg},filters,filterSizes,c1Space,c1Scale,c1OL,flippedPatches{iPatch},patchSizes(:,iPatch)',[],IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
+                C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,flippedPatches{iPatch},patchSizes(:,iPatch)',[],IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
                 s2{iImg}{iPatch} = 0; % takes too much memory
                 s1{iImg} = 0; % takes too much memory
             else
                 [c2(patchIndices,iImg),s2{iImg}{iPatch},~,~,bestBands(patchIndices,iImg),bestLocations(patchIndices,iImg,:)] =...
-                C2(imgs{iImg},filters,filterSizes,c1Space,c1Scale,c1OL,flippedPatches{iPatch},patchSizes(:,iPatch)',c1{iImg},IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
+                C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,flippedPatches{iPatch},patchSizes(:,iPatch)',c1{iImg},IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
                 s2{iImg}{iPatch} = 0; % takes too much memory
             end
         end
