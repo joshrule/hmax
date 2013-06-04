@@ -16,6 +16,8 @@ Included are the following files:
 
 - README: this document
 
+- hmax-roadmap.pdf: a visual depiction of previous and ongoing HMAX work.
+
 - C1.m: Given an image, this function returns S1 & C1 unit responses
 
 - C2.m: Given an image, this function returns S1, C1, S2, & C2 unit responses.
