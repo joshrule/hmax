@@ -15,7 +15,6 @@ function c1cell = c1rFromCells(imgs,params)
 c1cell = cell(1,length(imgs));
 for i = 1:length(imgs)
     c1r = {};
-    dummy = struct;
     cacheFile = [imgs{i} '.c1.mat'];
     if exist(cacheFile,'file')
         loaded = load(cacheFile,'c1r');
@@ -30,8 +29,7 @@ for i = 1:length(imgs)
                 params.c1Space,...
                 params.c1Scale,...
                 params.c1OL);
-        dummy.c1r = c1r;
-        saveWrapper(cacheFile,dummy);
+        save(cacheFile,'c1r');
     end
     c1cell{i} = c1r;
 end
