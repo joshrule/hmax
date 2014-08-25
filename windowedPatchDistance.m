@@ -69,7 +69,8 @@ function distances = windowedPatchDistance(c1Img,patch,ALLS2C1PRUNE,ORIENTATIONS
 
     patchXc1Img = zeros(size(c1ImgSquared));
     for i = 1:c1ImgDepth
-        patchXc1Img = patchXc1Img + conv2(c1Img(:,:,i),keepP(:,:,i) .* patch(:,:,i), 'same');
+        tmpPatch = flipud(fliplr(double(patch(:,:,i)))); % flipped for conv2
+        patchXc1Img = patchXc1Img + conv2(c1Img(:,:,i),keepP(:,:,i) .* tmpPatch, 'same');
     end
 
     distancesSquared = c1ImgSquared - 2*patchXc1Img + patchSquaredSum;

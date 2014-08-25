@@ -48,9 +48,6 @@ function [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filte
     if (nargin < 11 || isempty(c1)) c1 = cell(1,nImgs); end;
     if (nargin < 10) ALLS2C1PRUNE = 0; end;
 
-    % because conv2 is faster than filter2
-    flippedPatches = flipPatches(linearPatches,patchSizes);
-
     c2 = zeros(nPatches,nImgs);
     s2 = cell(1,nImgs);
     s1 = cell(1,nImgs);
@@ -62,46 +59,14 @@ function [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filte
             patchIndices = (nPatchesPerSize*(iPatch-1)+1):(nPatchesPerSize*iPatch);
             if isempty(c1{iImg}),  %compute C1 & S1
                 [c2(patchIndices,iImg),s2{iImg}{iPatch},c1{iImg},s1{iImg},bestBands(patchIndices,iImg),bestLocations(patchIndices,iImg,:)] =...
-                C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,flippedPatches{iPatch},patchSizes(:,iPatch)',[],IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
+                C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,linearPatches{iPatch},patchSizes(:,iPatch)',[],IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
                 s2{iImg}{iPatch} = 0; % takes too much memory
                 s1{iImg} = 0; % takes too much memory
             else
                 [c2(patchIndices,iImg),s2{iImg}{iPatch},~,~,bestBands(patchIndices,iImg),bestLocations(patchIndices,iImg,:)] =...
-                C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,flippedPatches{iPatch},patchSizes(:,iPatch)',c1{iImg},IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
+                C2(img,filters,filterSizes,c1Space,c1Scale,c1OL,linearPatches{iPatch},patchSizes(:,iPatch)',c1{iImg},IGNOREPARTIALS,ALLS2C1PRUNE,ORIENTATIONS2C1PRUNE);
                 s2{iImg}{iPatch} = 0; % takes too much memory
             end
-        end
-    end
-end
-
-function flippedPatches = flipPatches(patches,patchSizes)
-% flippedPatches = flipPatches(patches,patchSizes)
-%
-% flips all patches, because in MATLAB conv2 is much faster than filter2.
-% It does NOT affect C1 code, which uses imfilter (patches are not used in C1).
-%
-% args:
-%
-%     patches: a cell array with 1 cell/patchSize, each cell holds an
-%     patchSizeX * patchSizeY * nOrientations x nPatchesPerSize matrix
-%   
-%     patchSizes: a 3 x nPatchSizes matrix of patch sizes 
-%     Each column should hold [nRows; nCols; nOrients]
-%
-% returns: flippedPatches, identical to patches but all patches are flipped
-
-    nPatchSizes = size(patchSizes,2);
-    nPatchesPerSize = size(patches{1},2);
-
-    flippedPatches = cell(1,nPatchSizes);
-    parfor i = 1:nPatchSizes
-        sizeX = patchSizes(1,i);
-        sizeY = patchSizes(2,i);
-        flippedPatches{i} = zeros(size(patches{i}));
-        for j = 1:nPatchesPerSize
-            squarePatch = reshape(patches{i}(:,j),[sizeX,sizeY,4]);
-            flippedPatch = squarePatch(end:-1:1,end:-1:1,:);
-            flippedPatches{i}(:,j) = flippedPatch(:);
         end
     end
 end
