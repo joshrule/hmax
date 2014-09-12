@@ -54,7 +54,7 @@ function [c2,c1,bestBands,bestLocations,s2,s1] = extractC2FromCell(filters,filte
     bestBands = zeros(nPatches,nImgs);
     bestLocations = zeros(nPatches,nImgs,2);
     for iImg = 1:nImgs
-        img = double(resizeImage(grayImage(imread(imgs{iImg})),maxSize));
+        img = double(grayImage(uint8(resizeImage(double(imread(imgs{iImg})),maxSize))));
         for iPatch = 1:nPatchSizes
             patchIndices = (nPatchesPerSize*(iPatch-1)+1):(nPatchesPerSize*iPatch);
             if isempty(c1{iImg}),  %compute C1 & S1
